@@ -18,14 +18,30 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleValidationErrors(MethodArgumentNotValidException ex) {
 
-        return ResponseEntity.badRequest().body("Invalid Input");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(false, "Invalid Input", null));
     }
 
     @ExceptionHandler(NotFountException.class)
-    public ResponseEntity resourceNotFount(NotFountException ex) {
+    public ResponseEntity<ApiResponse<Void>> resourceNotFount(NotFountException ex) {
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiResponse<>(false, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(AuthenticationFailedException.class)
+    public ResponseEntity<ApiResponse<Void>> authenticationFailed(AuthenticationFailedException ex) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse<>(false, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(AccountNotActiveException.class)
+    public ResponseEntity<ApiResponse<Void>> accountNotActive(AccountNotActiveException ex) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ApiResponse<>(false, ex.getMessage(), null));
     }
 }
