@@ -5,11 +5,9 @@ import com.invoice.exception.DuplicateResourceException;
 import com.invoice.exception.NotFountException;
 import com.invoice.models.Template;
 import com.invoice.repositories.TemplateRepository;
-import com.invoice.repositories.TemplateSummary;
-import jakarta.validation.Valid;
+import com.invoice.repositories.TemplateSummaryView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -22,9 +20,9 @@ public class TemplateService {
         this.templateRepository = templateRepository;
     }
 
-    public List<TemplateSummary> getTemplatesSummary() {
+    public List<TemplateSummaryView> getTemplatesSummary() {
 
-        List<TemplateSummary> templateSummaryList = templateRepository.findAllBy();
+        List<TemplateSummaryView> templateSummaryList = templateRepository.findAllBy();
         return templateSummaryList;
     }
 

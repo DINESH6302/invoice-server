@@ -4,11 +4,10 @@ import com.invoice.dto.ApiResponse;
 import com.invoice.dto.TemplateCreationRequestDto;
 import com.invoice.dto.TemplateSummaryDto;
 import com.invoice.models.Template;
-import com.invoice.repositories.TemplateSummary;
+import com.invoice.repositories.TemplateSummaryView;
 import com.invoice.services.TemplateService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +39,7 @@ public class TemplateController {
     @GetMapping
     public ResponseEntity<List<TemplateSummaryDto>> getTemplatesSummary() {
 
-        List<TemplateSummary> templateSummaryList = templateService.getTemplatesSummary();
+        List<TemplateSummaryView> templateSummaryList = templateService.getTemplatesSummary();
         List<TemplateSummaryDto> responseDto = new ArrayList<>();
 
         templateSummaryList.forEach(templateSummary -> {
