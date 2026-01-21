@@ -1,5 +1,6 @@
 package com.invoice.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -36,7 +37,7 @@ public class Organization extends BaseModel {
     @Column(name = "gst_no", nullable = false, unique = true)
     private String gstNo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private Address address;
 }

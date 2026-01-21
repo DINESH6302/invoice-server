@@ -19,8 +19,7 @@ public class Address extends BaseModel {
     private Long addressId;
 
     @Column(nullable = false)
-    private String line1;
-    private String line2;
+    private String street;
 
     @Column(nullable = false)
     private String city;
