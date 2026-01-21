@@ -5,7 +5,7 @@ import com.invoice.exception.DuplicateResourceException;
 import com.invoice.exception.NotFountException;
 import com.invoice.models.Template;
 import com.invoice.repositories.TemplateRepository;
-import com.invoice.repositories.TemplateSummaryView;
+import com.invoice.repositories.columnviews.TemplateSummaryView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,7 @@ public class TemplateService {
     }
 
     @Transactional
-    public Template createTemplate(TemplateCreationRequestDto creationReqDto) {
+    public void createTemplate(TemplateCreationRequestDto creationReqDto) {
         try {
             // check if the template already exists with the name
             if (templateRepository.existsByTemplateName(creationReqDto.getTemplateName())) {
@@ -40,20 +40,20 @@ public class TemplateService {
 
             Template template = mapDtoToTemplate(creationReqDto);
 
-            return templateRepository.save(template);
+            templateRepository.save(template);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Transactional
-    public Template updateTemplate(Long templateId, TemplateCreationRequestDto updateReqDto) {
+    public void updateTemplate(Long templateId, TemplateCreationRequestDto updateReqDto) {
         Template template = templateRepository.findById(templateId)
                 .orElseThrow(() -> new NotFountException("Template not found."));
 
         mapDtoToTemplate(updateReqDto, template);
 
-        return templateRepository.save(template);
+        templateRepository.save(template);
     }
 
     @Transactional

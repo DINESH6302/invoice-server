@@ -1,4 +1,4 @@
-package com.invoice.repositories;
+package com.invoice.repositories.columnviews;
 
 import java.time.Instant;
 
