@@ -1,6 +1,6 @@
-package com.invoice.controllers;
+package com.invoice.controller;
 
-import com.invoice.services.UserServices;
+import com.invoice.service.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

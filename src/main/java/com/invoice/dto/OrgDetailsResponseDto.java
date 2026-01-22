@@ -8,5 +8,5 @@ public class OrgDetailsResponseDto {
     private String orgName;
     private String gstNo;
     private String currency;
-    private AddressResponseDto address;
+    private AddressDto address;
 }

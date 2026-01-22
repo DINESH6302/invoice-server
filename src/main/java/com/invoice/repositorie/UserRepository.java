@@ -1,4 +1,4 @@
-package com.invoice.repositories;
+package com.invoice.repositorie;
 
 import com.invoice.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,11 +1,11 @@
-package com.invoice.controllers;
+package com.invoice.controller;
 
 import com.invoice.dto.ApiResponse;
 import com.invoice.dto.TemplateCreationRequestDto;
 import com.invoice.dto.TemplateSummaryDto;
 import com.invoice.models.Template;
-import com.invoice.repositories.columnviews.TemplateSummaryView;
-import com.invoice.services.TemplateService;
+import com.invoice.repositorie.columnviews.TemplateSummaryView;
+import com.invoice.service.TemplateService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

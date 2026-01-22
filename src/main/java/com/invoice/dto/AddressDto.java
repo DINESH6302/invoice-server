@@ -3,7 +3,7 @@ package com.invoice.dto;
 import lombok.Data;
 
 @Data
-public class AddressResponseDto {
+public class AddressDto {
     private String street;
     private String city;
     private String state;

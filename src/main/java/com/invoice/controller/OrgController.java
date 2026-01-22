@@ -1,11 +1,9 @@
-package com.invoice.controllers;
+package com.invoice.controller;
 
-import com.invoice.dto.AddressResponseDto;
 import com.invoice.dto.ApiResponse;
 import com.invoice.dto.OrgCreationRequestDto;
 import com.invoice.dto.OrgDetailsResponseDto;
-import com.invoice.models.Organization;
-import com.invoice.services.OrgService;
+import com.invoice.service.OrgService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

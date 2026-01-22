@@ -1,6 +1,6 @@
-package com.invoice.config;
+package com.invoice.filter;
 
-import com.invoice.services.JWTService;
+import com.invoice.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -55,6 +55,5 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         chain.doFilter(req, res);
     }
-
 }
 

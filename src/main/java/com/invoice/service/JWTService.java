@@ -1,4 +1,4 @@
-package com.invoice.services;
+package com.invoice.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

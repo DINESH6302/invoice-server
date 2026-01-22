@@ -1,11 +1,11 @@
-package com.invoice.services;
+package com.invoice.service;
 
 import com.invoice.dto.TemplateCreationRequestDto;
 import com.invoice.exception.DuplicateResourceException;
 import com.invoice.exception.NotFountException;
 import com.invoice.models.Template;
-import com.invoice.repositories.TemplateRepository;
-import com.invoice.repositories.columnviews.TemplateSummaryView;
+import com.invoice.repositorie.TemplateRepository;
+import com.invoice.repositorie.columnviews.TemplateSummaryView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

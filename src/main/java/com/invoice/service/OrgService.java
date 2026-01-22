@@ -1,15 +1,15 @@
-package com.invoice.services;
+package com.invoice.service;
 
-import com.invoice.dto.AddressResponseDto;
+import com.invoice.dto.AddressDto;
 import com.invoice.dto.OrgCreationRequestDto;
 import com.invoice.dto.OrgDetailsResponseDto;
 import com.invoice.exception.DuplicateResourceException;
 import com.invoice.exception.NotFountException;
 import com.invoice.models.Organization;
 import com.invoice.models.User;
-import com.invoice.repositories.OrgRepository;
-import com.invoice.repositories.UserRepository;
-import com.invoice.repositories.columnviews.OrgSummaryView;
+import com.invoice.repositorie.OrgRepository;
+import com.invoice.repositorie.UserRepository;
+import com.invoice.repositorie.columnviews.OrgSummaryView;
 import com.invoice.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class OrgService {
         Organization org = orgRepo.findById(orgId)
                 .orElseThrow(() -> new NotFountException("Organization not found."));
 
-        AddressResponseDto addressDto = new AddressResponseDto();
+        AddressDto addressDto = new AddressDto();
         addressDto.setStreet(org.getAddress().getStreet());
         addressDto.setCity(org.getAddress().getCity());
         addressDto.setState(org.getAddress().getState());

@@ -1,4 +1,4 @@
-package com.invoice.services;
+package com.invoice.service;
 
 import com.invoice.dto.Tokens;
 import com.invoice.dto.LoginRequestDto;
@@ -9,9 +9,9 @@ import com.invoice.exception.DuplicateResourceException;
 import com.invoice.models.Enum.UserStatus;
 import com.invoice.models.RefreshToken;
 import com.invoice.models.User;
-import com.invoice.repositories.RefreshTokenRepository;
-import com.invoice.repositories.UserRepository;
-import com.invoice.repositories.UserStatusView;
+import com.invoice.repositorie.RefreshTokenRepository;
+import com.invoice.repositorie.UserRepository;
+import com.invoice.repositorie.UserStatusView;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.http.Cookie;

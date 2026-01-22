@@ -1,7 +1,7 @@
-package com.invoice.repositories;
+package com.invoice.repositorie;
 
 import com.invoice.models.Template;
-import com.invoice.repositories.columnviews.TemplateSummaryView;
+import com.invoice.repositorie.columnviews.TemplateSummaryView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
