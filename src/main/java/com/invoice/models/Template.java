@@ -26,7 +26,7 @@ public class Template extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long templateId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_id", nullable = false)
     private Organization organization;
 

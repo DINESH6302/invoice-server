@@ -4,14 +4,12 @@ import com.invoice.context.OrgContext;
 import com.invoice.dto.AddressDto;
 import com.invoice.dto.CustomerCreationReqDto;
 import com.invoice.dto.CustomerDetailsResponseDto;
-import com.invoice.exception.AccessDeniedException;
 import com.invoice.exception.NotFountException;
 import com.invoice.models.Address;
 import com.invoice.models.Customer;
 import com.invoice.models.Organization;
 import com.invoice.repositorie.CustomerRepository;
 import com.invoice.repositorie.OrgRepository;
-import com.invoice.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,18 +31,13 @@ public class CustomerService {
     }
 
     public List<CustomerDetailsResponseDto> getAllCustomers() {
-        Long userId = UserUtil.getUserId();
         Long orgId = OrgContext.getOrgId();
-
-        if (!orgRepo.existsByUser_UserIdAndOrgId(userId, orgId)) {
-            throw new AccessDeniedException("You don't have permission to do this action.");
-        }
 
         List<Customer> customersList = customerRepo.getCustomerByOrganization_OrgId(orgId);
 
         List<CustomerDetailsResponseDto> responseDtoList = new ArrayList<>();
 
-        for(Customer cx : customersList){
+        for (Customer cx : customersList) {
             CustomerDetailsResponseDto dto = new CustomerDetailsResponseDto();
             dto.setCustomerId(cx.getCustomerId());
             dto.setCustomerName(cx.getCustomerName());
@@ -65,17 +58,10 @@ public class CustomerService {
     }
 
     public CustomerDetailsResponseDto getCustomerById(Long customerId) {
-        Long userId = UserUtil.getUserId();
-        Long orgId = OrgContext.getOrgId();
-
         Optional<Customer> customerOpt = customerRepo.findById(customerId);
 
-        if(!customerOpt.isPresent()){
+        if (customerOpt.isEmpty()) {
             throw new NotFountException("Customer not found.");
-        }
-
-        if (!orgRepo.existsByUser_UserIdAndOrgId(userId, orgId)) {
-            throw new AccessDeniedException("You don't have permission to do this action.");
         }
 
         Customer cx = customerOpt.get();
@@ -97,12 +83,7 @@ public class CustomerService {
 
     @Transactional
     public Long createCustomer(CustomerCreationReqDto requestDto) {
-        Long userId = UserUtil.getUserId();
         Long orgId = OrgContext.getOrgId();
-
-        if (!orgRepo.existsByUser_UserIdAndOrgId(userId, orgId)) {
-            throw new AccessDeniedException("You don't have permission to do this action.");
-        }
         Organization orgObj = orgRepo.findById(orgId).get();
 
         Address address = new Address();
@@ -124,17 +105,10 @@ public class CustomerService {
     }
 
     public void updateCustomer(Long customerId, CustomerCreationReqDto requestDto) {
-        Long userId = UserUtil.getUserId();
-        Long orgId = OrgContext.getOrgId();
-
         Optional<Customer> customerOpt = customerRepo.findById(customerId);
 
-        if(!customerOpt.isPresent()){
+        if (customerOpt.isEmpty()) {
             throw new NotFountException("Customer not found.");
-        }
-
-        if (!orgRepo.existsByUser_UserIdAndOrgId(userId, orgId)) {
-            throw new AccessDeniedException("You don't have permission to do this action.");
         }
 
         Customer customer = customerOpt.get();
@@ -154,17 +128,10 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Long customerId) {
-        Long userId = UserUtil.getUserId();
-        Long orgId = OrgContext.getOrgId();
-
         Optional<Customer> customerOpt = customerRepo.findById(customerId);
 
-        if(!customerOpt.isPresent()){
+        if (customerOpt.isEmpty()) {
             throw new NotFountException("Customer not found.");
-        }
-
-        if (!orgRepo.existsByUser_UserIdAndOrgId(userId, orgId)) {
-            throw new AccessDeniedException("You don't have permission to do this action.");
         }
 
         customerRepo.deleteById(customerId);

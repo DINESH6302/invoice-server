@@ -6,21 +6,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 
-    List<TemplateSummaryView> findAllBy();
+    Boolean existsByTemplateName_AndOrganization_OrgId(String templateName, Long orgId);
 
-    Boolean existsByTemplateName(String templateName);
     Boolean existsByTemplateId(Long templateId);
 
-    @Override
-    void deleteById(Long templateId);
+    List<TemplateSummaryView> findAllByOrganization_OrgId(Long orgId);
 
-    //    List<Template> findByOrganizationOrgId(Long orgId);
-//
-//    Optional<Template> findByTemplateIdAndOrganizationOrgId(Long templateId, Long orgId);
-//
-//    boolean existsByTemplateNameAndOrganizationOrgId(String templateName, Long orgId);
+    Boolean existsByTemplateId_AndOrganization_OrgId(Long templateId, Long orgId);
+    Optional<Template> findByTemplateId_AndOrganization_OrgId(Long templateId, Long orgId);
+
 }
