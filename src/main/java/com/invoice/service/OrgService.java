@@ -1,5 +1,6 @@
 package com.invoice.service;
 
+import com.invoice.context.OrgContext;
 import com.invoice.dto.AddressDto;
 import com.invoice.dto.OrgCreationRequestDto;
 import com.invoice.dto.OrgDetailsResponseDto;
@@ -50,9 +51,9 @@ public class OrgService {
         return orgSummaryList;
     }
 
-    public OrgDetailsResponseDto getOrgDetails(Long orgId) {
+    public OrgDetailsResponseDto getOrgDetails() {
 
-        Organization org = orgRepo.findById(orgId)
+        Organization org = orgRepo.findById(OrgContext.getOrgId())
                 .orElseThrow(() -> new NotFountException("Organization not found."));
 
         AddressDto addressDto = new AddressDto();
@@ -98,12 +99,8 @@ public class OrgService {
     }
 
     @Transactional
-    public void updateOrg(Long orgId, OrgCreationRequestDto requestDto) {
-        Optional<Organization> org = orgRepo.findById(orgId);
-
-        if (org.isEmpty()) {
-            throw new NotFountException("Organization with id " + orgId + " not found.");
-        }
+    public void updateOrg(OrgCreationRequestDto requestDto) {
+        Optional<Organization> org = orgRepo.findById(OrgContext.getOrgId());
 
         Address address = new Address();
         address.setStreet(requestDto.getAddress().getStreet());
@@ -122,14 +119,8 @@ public class OrgService {
     }
 
     @Transactional
-    public void deleteOrg(Long orgId) {
-        Optional<Organization> org = orgRepo.findById(orgId);
-
-        if (org.isEmpty()) {
-            throw new NotFountException("Organization not found.");
-        }
-
-        orgRepo.deleteById(orgId);
+    public void deleteOrg() {
+        orgRepo.deleteById(OrgContext.getOrgId());
     }
 
     public User getUserObject() {
