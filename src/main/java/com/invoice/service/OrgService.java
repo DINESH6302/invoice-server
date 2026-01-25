@@ -51,9 +51,8 @@ public class OrgService {
         return orgSummaryList;
     }
 
-    public OrgDetailsResponseDto getOrgDetails() {
-
-        Organization org = orgRepo.findById(OrgContext.getOrgId())
+    public OrgDetailsResponseDto getOrgDetails(Long orgId) {
+        Organization org = orgRepo.findById(orgId)
                 .orElseThrow(() -> new NotFountException("Organization not found."));
 
         AddressDto addressDto = new AddressDto();
@@ -71,6 +70,10 @@ public class OrgService {
         orgDetailsDto.setAddress(addressDto);
 
         return orgDetailsDto;
+    }
+
+    public OrgDetailsResponseDto getOrgDetails() {
+        return getOrgDetails(OrgContext.getOrgId());
     }
 
     @Transactional

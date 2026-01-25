@@ -52,6 +52,18 @@ public class OrgController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
+    @GetMapping("/{orgId}")
+    public ResponseEntity<ApiResponse<OrgDetailsResponseDto>> getOrgDetails(@PathVariable Long orgId) {
+        OrgDetailsResponseDto orgDetails = orgService.getOrgDetails(orgId);
+
+        ApiResponse<OrgDetailsResponseDto> apiResponse = new ApiResponse<>();
+        apiResponse.setSuccess(true);
+        apiResponse.setData(orgDetails);
+        apiResponse.setMessage("Organization details fetched successfully.");
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<Map>> createOrg(@RequestBody @Valid OrgCreationRequestDto requestDto) {
         Long orgId = orgService.createOrg(requestDto);
