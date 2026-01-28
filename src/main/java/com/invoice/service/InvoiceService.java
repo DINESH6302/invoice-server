@@ -2,6 +2,10 @@ package com.invoice.service;
 
 import com.invoice.context.OrgContext;
 import com.invoice.dto.InvoiceCreationRequestDto;
+import com.invoice.dto.InvoiceResponseDto;
+import com.invoice.dto.InvoiceSummary;
+import com.invoice.dto.InvoiceSummaryDto;
+import com.invoice.dto.StatusUpdateDto;
 import com.invoice.exception.NotFountException;
 import com.invoice.models.Customer;
 import com.invoice.models.Enum.InvoiceStatus;
@@ -17,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,12 +41,45 @@ public class InvoiceService {
         this.orgRepository = orgRepository;
     }
 
-    public void getInvoices() {
-        // Implementation for fetching invoices will go here
+    public List<InvoiceSummaryDto> getInvoicesSummary() {
+        List<InvoiceSummary> invoiceList = invoiceRepository.findByOrganization_OrgId(OrgContext.getOrgId());
+
+        return invoiceList.stream().map(e ->
+                new InvoiceSummaryDto(
+                        e.getInvoiceId(),
+                        e.getTemplateId(),
+                        e.getInvoiceNumber(),
+                        e.getCustomerName(),
+                        e.getInvoiceDate(),
+                        e.getTotalAmount(),
+                        e.getInvoiceStatus()
+                )).toList();
+    }
+
+    public InvoiceResponseDto getInvoice(Long invoiceId) {
+        Invoice invoice = invoiceRepository.findByInvoiceId_AndOrganization_OrgId(invoiceId, OrgContext.getOrgId())
+                .orElseThrow(() -> new NotFountException("Invoice not found."));
+
+        InvoiceResponseDto response = new InvoiceResponseDto();
+        response.setInvoiceId(invoice.getInvoiceId());
+        response.setCustomerId(invoice.getCustomer().getCustomerId());
+        response.setInvoiceNumber(invoice.getInvoiceNumber());
+        response.setDate(invoice.getDate());
+        response.setStatus(invoice.getInvoiceStatus());
+        response.setTaxAmount(invoice.getTaxAmount());
+        response.setTotalAmount(invoice.getTotalAmount());
+        response.setHeader(invoice.getHeader());
+        response.setCustomerDetails(invoice.getCustomerDetails());
+        response.setInvoiceMeta(invoice.getInvoiceMeta());
+        response.setItems(invoice.getItems());
+        response.setTotal(invoice.getTotal());
+        response.setFooter(invoice.getFooter());
+
+        return response;
     }
 
     @Transactional
-    public void createInvoice(InvoiceCreationRequestDto requestDto) {
+    public Long createInvoice(InvoiceCreationRequestDto requestDto) {
         Long customerId = requestDto.getCustomerId();
         Customer customer = customerRepository.findByCustomerIdAndOrganization_OrgId(customerId, OrgContext.getOrgId())
                 .orElseThrow(() -> new NotFountException("Customer not found."));
@@ -51,9 +90,18 @@ public class InvoiceService {
         Organization org = orgRepository.findById(OrgContext.getOrgId())
                 .orElseThrow(() -> new NotFountException("Organization not found."));
 
-        Map<String, Object> header = requestDto.getHeader();
-        String invoiceNumber = (String) header.get("Invoice No");
-        LocalDate date = LocalDate.parse((String) header.get("Date"));
+        String invoiceNumber = "";
+        LocalDate date = LocalDate.now();
+
+        ArrayList<Object> headerFields = (ArrayList<Object>) requestDto.getHeader().get("fields");
+        for (Object fieldObj : headerFields) {
+            Map<String, Object> field = (Map<String, Object>) fieldObj;
+            if ("invoice no".equals(field.get("label").toString().toLowerCase().trim())) {
+                invoiceNumber = (String) field.get("value");
+            } else if ("date".equals(field.get("label").toString().toLowerCase().trim())) {
+                date = LocalDate.parse((String) field.get("value"));
+            }
+        }
 
         Invoice invoice = new Invoice();
         invoice.setCustomer(customer);
@@ -62,7 +110,84 @@ public class InvoiceService {
         invoice.setInvoiceStatus(InvoiceStatus.DRAFT);
         invoice.setOrganization(org);
         invoice.setTemplate(template);
+        invoice.setHeader(requestDto.getHeader());
+        invoice.setCustomerDetails(requestDto.getCustomerDetails());
+        invoice.setInvoiceMeta(requestDto.getInvoiceMeta());
+        invoice.setItems(requestDto.getItems());
+        invoice.setTotal(requestDto.getTotal());
+        invoice.setFooter(requestDto.getFooter());
 
+        invoiceRepository.save(invoice);
+        return invoice.getInvoiceId();
+    }
 
+    @Transactional
+    public void updateInvoice(Long invoiceId, InvoiceCreationRequestDto requestDto) {
+        Invoice invoice = invoiceRepository.findByInvoiceId_AndOrganization_OrgId(invoiceId, OrgContext.getOrgId())
+                .orElseThrow(() -> new NotFountException("Invoice not found."));
+
+        Customer customer = customerRepository.findByCustomerIdAndOrganization_OrgId(requestDto.getCustomerId(), OrgContext.getOrgId())
+                .orElseThrow(() -> new NotFountException("Customer not found."));
+
+        Template template = templateRepository.findByTemplateIdAndOrganization_OrgId(requestDto.getTemplateId(), OrgContext.getOrgId())
+                .orElseThrow(() -> new NotFountException("You don't have access to this template."));
+
+        Organization org = orgRepository.findById(OrgContext.getOrgId())
+                .orElseThrow(() -> new NotFountException("Organization not found."));
+
+        String invoiceNumber = "";
+        LocalDate date = LocalDate.now();
+
+        ArrayList<Object> headerFields = (ArrayList<Object>) requestDto.getHeader().get("fields");
+        for (Object fieldObj : headerFields) {
+            Map<String, Object> field = (Map<String, Object>) fieldObj;
+            if ("invoice no".equals(field.get("label").toString().toLowerCase().trim())) {
+                invoiceNumber = (String) field.get("value");
+            } else if ("date".equals(field.get("label").toString().toLowerCase().trim())) {
+                date = LocalDate.parse((String) field.get("value"));
+            }
+        }
+
+        invoice.setCustomer(customer);
+        invoice.setInvoiceNumber(invoiceNumber);
+        invoice.setDate(date);
+        invoice.setInvoiceStatus(invoice.getInvoiceStatus());
+        invoice.setOrganization(org);
+        invoice.setTemplate(template);
+        invoice.setHeader(requestDto.getHeader());
+        invoice.setCustomerDetails(requestDto.getCustomerDetails());
+        invoice.setInvoiceMeta(requestDto.getInvoiceMeta());
+        invoice.setItems(requestDto.getItems());
+        invoice.setTotal(requestDto.getTotal());
+        invoice.setFooter(requestDto.getFooter());
+        invoiceRepository.save(invoice);
+    }
+
+    @Transactional
+    public void updateInvoiceStatus(StatusUpdateDto statusUpdateReq) {
+        List<Long> invoiceIds = statusUpdateReq.getInvoiceIds();
+        InvoiceStatus status = statusUpdateReq.getStatus();
+
+        List<Invoice> invoices = invoiceRepository.findByInvoiceIdInAndOrganization_OrgId(invoiceIds, OrgContext.getOrgId());
+
+        if (invoices.size() != invoiceIds.size()) {
+            throw new NotFountException("Selected invoices not found.");
+        }
+
+        for (Invoice invoice : invoices) {
+            invoice.setInvoiceStatus(status);
+        }
+
+        invoiceRepository.saveAll(invoices);
+    }
+
+    @Transactional
+    public void deleteInvoice(Map<String, List<Long>> idsMap) {
+        List<Long> idsList = idsMap.get("invoice_ids");
+        if (invoiceRepository.countByInvoiceIdInAndOrganization_OrgId(idsList, OrgContext.getOrgId()) != idsList.size()) {
+            throw new NotFountException("Selected invoices not found.");
+        }
+
+        invoiceRepository.deleteByInvoiceIdInAndOrganization_OrgId(idsList, OrgContext.getOrgId());
     }
 }

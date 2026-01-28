@@ -1,18 +1,30 @@
 package com.invoice.controller;
 
+import com.invoice.dto.ApiResponse;
 import com.invoice.dto.InvoiceCreationRequestDto;
+import com.invoice.dto.InvoiceResponseDto;
+import com.invoice.dto.InvoiceSummaryDto;
+import com.invoice.dto.StatusUpdateDto;
 import com.invoice.service.InvoiceService;
-import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/invoices")
-@CrossOrigin("http://localhost:3000")
+@RequestMapping("/v1/invoices")
+@CrossOrigin(origins = "http://localhost:3000")
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -22,12 +34,67 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public void getInvoices() {
-        // Implementation for fetching invoices will go here
+    public ResponseEntity<ApiResponse<List<InvoiceSummaryDto>>> getInvoicesSummary() {
+        List<InvoiceSummaryDto> invoices = invoiceService.getInvoicesSummary();
+
+        ApiResponse<List<InvoiceSummaryDto>> response = ApiResponse.<List<InvoiceSummaryDto>>builder()
+                .success(true)
+                .message("Invoices fetched successfully.")
+                .data(invoices)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{invoiceId}")
+    public ResponseEntity<ApiResponse<InvoiceResponseDto>> getInvoice(@PathVariable Long invoiceId) {
+        InvoiceResponseDto response = invoiceService.getInvoice(invoiceId);
+
+        ApiResponse<InvoiceResponseDto> apiResponse = ApiResponse.<InvoiceResponseDto>builder()
+                .success(true)
+                .message("Invoice fetched successfully.")
+                .data(response)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
     @PostMapping
-    public void createInvoice(@RequestBody @Valid InvoiceCreationRequestDto requestDto) {
+    public ResponseEntity<ApiResponse<Map>> createInvoice(@RequestBody InvoiceCreationRequestDto requestDto) {
+        Long invoiceId = invoiceService.createInvoice(requestDto);
 
+        ApiResponse<Map> response = ApiResponse.<Map>builder()
+                .success(true)
+                .message("Invoice created successfully.")
+                .data(Map.of("invoiceId", invoiceId))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{invoiceId}")
+    public ResponseEntity<ApiResponse<Map>> updateInvoice(@PathVariable Long invoiceId, @RequestBody InvoiceCreationRequestDto requestDto) {
+        invoiceService.updateInvoice(invoiceId, requestDto);
+        ApiResponse<Map> response = ApiResponse.<Map>builder()
+                .success(true)
+                .message("Invoice updated successfully.")
+                .data(Map.of("invoiceId", invoiceId))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/status")
+    public ResponseEntity<Void> updateInvoiceStatus(@RequestBody StatusUpdateDto statusUpdateReq) {
+        invoiceService.updateInvoiceStatus(statusUpdateReq);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteInvoice(@RequestBody Map<String, List<Long>> idsList) {
+        invoiceService.deleteInvoice(idsList);
+
+        return ResponseEntity.noContent().build();
     }
 }

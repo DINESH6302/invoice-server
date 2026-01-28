@@ -28,7 +28,8 @@ public class OrgContextFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/v1/auth") || (path.equals("/v1/orgs") && request.getMethod().equals("POST"));
+        String method = request.getMethod();
+        return path.startsWith("/v1/auth") || ((path.equals("/v1/orgs") && method.equals("POST"))) || path.equals("/v1/orgs/summary");
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Invoice extends BaseModel {
     @JoinColumn(name = "org_id", nullable = false)
     private Organization organization;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
@@ -51,10 +51,10 @@ public class Invoice extends BaseModel {
     private LocalDate date;
 
     @Column(name = "total_amount", nullable = false)
-    private Integer totalAmount;
+    private Double totalAmount = 0D;
 
     @Column(name = "tax_amount")
-    private Integer taxAmount;
+    private Double taxAmount = 0D;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
