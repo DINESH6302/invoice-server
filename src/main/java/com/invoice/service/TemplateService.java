@@ -4,6 +4,7 @@ import com.invoice.context.OrgContext;
 import com.invoice.dto.DefaultTemplateRequestDto;
 import com.invoice.dto.TemplateCreationRequestDto;
 import com.invoice.dto.TemplateDetailsDto;
+import com.invoice.dto.TemplateSummaryDto;
 import com.invoice.exception.DuplicateResourceException;
 import com.invoice.exception.NotFountException;
 import com.invoice.models.Organization;
@@ -15,6 +16,7 @@ import com.invoice.utils.UserUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +31,19 @@ public class TemplateService {
         this.orgRepository = orgRepository;
     }
 
-    public List<TemplateSummaryView> getTemplatesSummary() {
+    public List<TemplateSummaryDto> getTemplatesSummary() {
 
         List<TemplateSummaryView> templateSummaryList = templateRepository.findAllByOrganization_OrgId(OrgContext.getOrgId());
-        return templateSummaryList;
+        List<TemplateSummaryDto> responseDto = new ArrayList<>();
+        templateSummaryList.forEach(templateSummary -> {
+            responseDto.add(new TemplateSummaryDto(
+                    templateSummary.getTemplateId(),
+                    templateSummary.getIsDefault(),
+                    templateSummary.getTemplateName(),
+                    templateSummary.getUpdatedAt()));
+        });
+
+        return responseDto;
     }
 
     public TemplateDetailsDto getTemplate(Long templateId) {
@@ -122,7 +133,7 @@ public class TemplateService {
     @Transactional
     public void deleteTemplate(Long templateId) {
 
-        if(templateRepository.existsByTemplateIdAndIsDefault(templateId, true)) {
+        if (templateRepository.existsByTemplateIdAndIsDefault(templateId, true)) {
             throw new IllegalStateException("Cannot delete the default template. Please set another template as default first.");
         }
 
@@ -138,15 +149,10 @@ public class TemplateService {
     }
 
     private Template mapDtoToTemplate(TemplateCreationRequestDto dto, Template template) {
-        if (dto.getIsDefault()) {
-            // disable existing default template
-            templateRepository.disableDefaultTemplate(OrgContext.getOrgId());
-        }
 
         template.setTemplateName(dto.getTemplateName());
         template.setFontFamily(dto.getFontFamily());
         template.setFontSize(dto.getFontSize());
-        template.setIsDefault(dto.getIsDefault());
         template.setAccentColor(dto.getAccentColor());
         template.setHeader(dto.getHeader());
         template.setInvoiceMeta(dto.getInvoiceMeta());

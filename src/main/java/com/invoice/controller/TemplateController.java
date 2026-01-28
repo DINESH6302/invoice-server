@@ -40,18 +40,9 @@ public class TemplateController {
     @GetMapping
     public ResponseEntity<List<TemplateSummaryDto>> getTemplatesSummary() {
 
-        List<TemplateSummaryView> templateSummaryList = templateService.getTemplatesSummary();
-        List<TemplateSummaryDto> responseDto = new ArrayList<>();
+        List<TemplateSummaryDto> templateSummaryList = templateService.getTemplatesSummary();
 
-        templateSummaryList.forEach(templateSummary -> {
-            responseDto.add(new TemplateSummaryDto(
-                    templateSummary.getTemplateId(),
-                    templateSummary.getIsDefault(),
-                    templateSummary.getTemplateName(),
-                    templateSummary.getUpdatedAt()));
-        });
-
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.ok().body(templateSummaryList);
     }
 
     @GetMapping("/{templateId}")

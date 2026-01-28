@@ -23,8 +23,6 @@ public class TemplateCreationRequestDto {
     @NotNull
     private String accentColor;
 
-    private Boolean isDefault;
-
     @NotNull
     private Map<String, Object> header;
 
