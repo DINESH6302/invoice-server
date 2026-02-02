@@ -61,7 +61,7 @@ public class TemplateController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> createTemplate(@RequestBody @Valid TemplateCreationRequestDto creationReqDto) {
+    public ResponseEntity<ApiResponse<Void>> createTemplate(@RequestBody TemplateCreationRequestDto creationReqDto) {
         templateService.createTemplate(creationReqDto);
 
         return ResponseEntity.status(HttpStatus.OK)

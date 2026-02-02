@@ -1,24 +1,28 @@
 package com.invoice.dto;
 
-import java.util.Map;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Map;
 
 @Data
-public class TemplateCreationRequestDto {
+public class GenerateInvoiceDto {
+    @NotNull
+    private Long templateId;
 
     @NotNull
-    private String templateName;
+    private Long invoiceId;
 
     @NotNull
     private String fontFamily;
 
-    @NotNull
+    @Min(14)
+    @Max(30)
     private Integer fontSize;
 
+    @NotNull
     private String accentColor;
 
     @NotNull

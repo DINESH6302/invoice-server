@@ -84,6 +84,11 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/generate")
+    public void generateInvoices() {
+//        invoiceService.generateInvoices();
+    }
+
     @PatchMapping("/status")
     public ResponseEntity<Void> updateInvoiceStatus(@RequestBody StatusUpdateDto statusUpdateReq) {
         invoiceService.updateInvoiceStatus(statusUpdateReq);

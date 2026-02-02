@@ -103,6 +103,10 @@ public class TemplateService {
             Template template = mapDtoToTemplate(creationReqDto);
             template.setOrganization(orgObj);
 
+            if(templateRepository.countByOrganization_OrgId(orgId) == 0){
+                   template.setIsDefault(true);
+            }
+
             templateRepository.save(template);
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -40,7 +40,7 @@ public class Template extends BaseModel {
     @Column(name = "font_size", nullable = false)
     private Integer fontSize;
 
-    @Column(name = "accent_color", nullable = false)
+    @Column(name = "accent_color")
     private String accentColor;
 
     @Column(name = "is_default")

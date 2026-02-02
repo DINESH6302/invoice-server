@@ -21,6 +21,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     Boolean existsByTemplateId_AndOrganization_OrgId(Long templateId, Long orgId);
 
+    Integer countByOrganization_OrgId(Long orgId);
+
     Boolean existsByTemplateIdAndIsDefault(Long templateId, Boolean isDefault);
 
     Optional<Template> findByTemplateIdAndOrganization_OrgId(Long templateId, Long orgId);
