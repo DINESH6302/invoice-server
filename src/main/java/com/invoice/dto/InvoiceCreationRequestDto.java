@@ -14,6 +14,15 @@ public class InvoiceCreationRequestDto {
     private Long templateId;
 
     @NotNull
+    private Double total;
+
+    @NotNull
+    private Double tax;
+
+    @NotNull
+    private Double quantity;
+
+    @NotNull
     private Map<String, Object> header;
 
     @NotNull
@@ -26,7 +35,7 @@ public class InvoiceCreationRequestDto {
     private Map<String, Object> items;
 
     @NotNull
-    private Map<String, Object> total;
+    private Map<String, Object> summary;
 
     @NotNull
     private Map<String, Object> footer;

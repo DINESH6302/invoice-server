@@ -16,9 +16,10 @@ public class InvoiceResponseDto {
 
     private LocalDate date;
 
-    private Double taxAmount;
+    private Double tax;
 
-    private Double totalAmount;
+    private Double total;
+    private Double quantity;
 
     private Map<String, Object> header;
 
@@ -28,7 +29,7 @@ public class InvoiceResponseDto {
 
     private Map<String, Object> items;
 
-    private Map<String, Object> total;
+    private Map<String, Object> summary;
 
     private Map<String, Object> footer;
 

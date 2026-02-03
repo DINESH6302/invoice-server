@@ -84,6 +84,18 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/{invoiceId}/duplicate")
+    public ResponseEntity<ApiResponse<Void>> duplicateInvoice(@PathVariable Long invoiceId) {
+        invoiceService.duplicate(invoiceId);
+
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Duplicate invoice created.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("/generate")
     public void generateInvoices() {
 //        invoiceService.generateInvoices();

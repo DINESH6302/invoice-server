@@ -135,6 +135,28 @@ public class TemplateService {
     }
 
     @Transactional
+    public void duplicate(Long templateId) {
+        Template existingTemplate = templateRepository.findByTemplateIdAndOrganization_OrgId(templateId, OrgContext.getOrgId())
+                .orElseThrow(() -> new NotFountException("Template not found."));
+
+        Template newTemplate = new Template();
+        newTemplate.setOrganization(existingTemplate.getOrganization());
+        newTemplate.setTemplateName(existingTemplate.getTemplateName() + " - copy");
+        newTemplate.setFontFamily(existingTemplate.getFontFamily());
+        newTemplate.setFontSize(existingTemplate.getFontSize());
+        newTemplate.setAccentColor(existingTemplate.getAccentColor());
+        newTemplate.setHeader(existingTemplate.getHeader());
+        newTemplate.setInvoiceMeta(existingTemplate.getInvoiceMeta());
+        newTemplate.setCustomerDetails(existingTemplate.getCustomerDetails());
+        newTemplate.setItems(existingTemplate.getItems());
+        newTemplate.setTotal(existingTemplate.getTotal());
+        newTemplate.setFooter(existingTemplate.getFooter());
+        newTemplate.setIsDefault(false);
+
+        templateRepository.save(newTemplate);
+    }
+
+    @Transactional
     public void deleteTemplate(Long templateId) {
 
         if (templateRepository.existsByTemplateIdAndIsDefault(templateId, true)) {

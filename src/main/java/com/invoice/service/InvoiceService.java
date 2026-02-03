@@ -51,7 +51,7 @@ public class InvoiceService {
                         e.getInvoiceNumber(),
                         e.getCustomerName(),
                         e.getInvoiceDate(),
-                        e.getTotalAmount(),
+                        e.getTotal(),
                         e.getInvoiceStatus()
                 )).toList();
     }
@@ -66,13 +66,14 @@ public class InvoiceService {
         response.setInvoiceNumber(invoice.getInvoiceNumber());
         response.setDate(invoice.getDate());
         response.setStatus(invoice.getInvoiceStatus());
-        response.setTaxAmount(invoice.getTaxAmount());
-        response.setTotalAmount(invoice.getTotalAmount());
+        response.setTax(invoice.getTax());
+        response.setTotal(invoice.getTotal());
+        response.setQuantity(invoice.getQuantity());
         response.setHeader(invoice.getHeader());
         response.setCustomerDetails(invoice.getCustomerDetails());
         response.setInvoiceMeta(invoice.getInvoiceMeta());
         response.setItems(invoice.getItems());
-        response.setTotal(invoice.getTotal());
+        response.setSummary(invoice.getSummary());
         response.setFooter(invoice.getFooter());
 
         return response;
@@ -110,11 +111,14 @@ public class InvoiceService {
         invoice.setInvoiceStatus(InvoiceStatus.DRAFT);
         invoice.setOrganization(org);
         invoice.setTemplate(template);
+        invoice.setTotal(requestDto.getTotal());
+        invoice.setTax(requestDto.getTax());
+        invoice.setQuantity(requestDto.getQuantity());
         invoice.setHeader(requestDto.getHeader());
         invoice.setCustomerDetails(requestDto.getCustomerDetails());
         invoice.setInvoiceMeta(requestDto.getInvoiceMeta());
         invoice.setItems(requestDto.getItems());
-        invoice.setTotal(requestDto.getTotal());
+        invoice.setSummary(requestDto.getSummary());
         invoice.setFooter(requestDto.getFooter());
 
         invoiceRepository.save(invoice);
@@ -151,6 +155,9 @@ public class InvoiceService {
         invoice.setCustomer(customer);
         invoice.setInvoiceNumber(invoiceNumber);
         invoice.setDate(date);
+        invoice.setTotal(requestDto.getTotal());
+        invoice.setTax(requestDto.getTax());
+        invoice.setQuantity(requestDto.getQuantity());
         invoice.setInvoiceStatus(invoice.getInvoiceStatus());
         invoice.setOrganization(org);
         invoice.setTemplate(template);
@@ -158,9 +165,34 @@ public class InvoiceService {
         invoice.setCustomerDetails(requestDto.getCustomerDetails());
         invoice.setInvoiceMeta(requestDto.getInvoiceMeta());
         invoice.setItems(requestDto.getItems());
-        invoice.setTotal(requestDto.getTotal());
+        invoice.setSummary(requestDto.getSummary());
         invoice.setFooter(requestDto.getFooter());
         invoiceRepository.save(invoice);
+    }
+
+    @Transactional
+    public void duplicate(Long invoiceId) {
+        Invoice existingInvoice = invoiceRepository.findByInvoiceId_AndOrganization_OrgId(invoiceId, OrgContext.getOrgId())
+                .orElseThrow(() -> new NotFountException("Invoice not found."));
+
+        Invoice newInvoice = new Invoice();
+        newInvoice.setCustomer(existingInvoice.getCustomer());
+        newInvoice.setInvoiceNumber(existingInvoice.getInvoiceNumber() + " - copy");
+        newInvoice.setDate(existingInvoice.getDate());
+        newInvoice.setTotal(existingInvoice.getTotal());
+        newInvoice.setTax(existingInvoice.getTax());
+        newInvoice.setQuantity(existingInvoice.getQuantity());
+        newInvoice.setInvoiceStatus(InvoiceStatus.DRAFT);
+        newInvoice.setOrganization(existingInvoice.getOrganization());
+        newInvoice.setTemplate(existingInvoice.getTemplate());
+        newInvoice.setHeader(existingInvoice.getHeader());
+        newInvoice.setCustomerDetails(existingInvoice.getCustomerDetails());
+        newInvoice.setInvoiceMeta(existingInvoice.getInvoiceMeta());
+        newInvoice.setItems(existingInvoice.getItems());
+        newInvoice.setSummary(existingInvoice.getSummary());
+        newInvoice.setFooter(existingInvoice.getFooter());
+
+        invoiceRepository.save(newInvoice);
     }
 
     @Transactional

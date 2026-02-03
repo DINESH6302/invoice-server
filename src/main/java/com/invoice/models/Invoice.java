@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,11 +49,14 @@ public class Invoice extends BaseModel {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "total_amount", nullable = false)
-    private Double totalAmount = 0D;
+    @Column(name = "total", nullable = false)
+    private Double total = 0D;
 
-    @Column(name = "tax_amount")
-    private Double taxAmount = 0D;
+    @Column(name = "tax")
+    private Double tax = 0D;
+
+    @Column(name = "quantity")
+    private Double quantity = 0D;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
@@ -74,7 +76,7 @@ public class Invoice extends BaseModel {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private Map<String, Object> total;
+    private Map<String, Object> summary;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

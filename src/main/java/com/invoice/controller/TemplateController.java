@@ -84,6 +84,18 @@ public class TemplateController {
                 .body(new ApiResponse<>(true, "Default template updated successfully.", null));
     }
 
+    @PostMapping("/{templateId}/duplicate")
+    public ResponseEntity<ApiResponse<Void>> duplicateInvoice(@PathVariable Long templateId) {
+        templateService.duplicate(templateId);
+
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Invoice duplicated successfully.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @DeleteMapping("/{templateId}")
     public ResponseEntity<ApiResponse<Void>> deleteTemplate(@PathVariable Long templateId) {
         templateService.deleteTemplate(templateId);

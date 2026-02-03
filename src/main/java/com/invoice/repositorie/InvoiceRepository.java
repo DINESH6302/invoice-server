@@ -16,7 +16,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
                    i.invoiceNumber as invoiceNumber,
                    c.customerName as customerName,
                    i.date as invoiceDate,
-                   i.totalAmount as totalAmount,
+                   i.total as total,
                    i.invoiceStatus as invoiceStatus
             from Invoice i join i.customer c
             where i.organization.orgId = :orgId
