@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/v1/customers")
+@RequestMapping("/api/v1/customers")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CustomerController {
 
