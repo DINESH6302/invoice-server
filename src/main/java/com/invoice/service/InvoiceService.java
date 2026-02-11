@@ -196,24 +196,6 @@ public class InvoiceService {
     }
 
     @Transactional
-    public void updateInvoiceStatus(StatusUpdateDto statusUpdateReq) {
-        List<Long> invoiceIds = statusUpdateReq.getInvoiceIds();
-        InvoiceStatus status = statusUpdateReq.getStatus();
-
-        List<Invoice> invoices = invoiceRepository.findByInvoiceIdInAndOrganization_OrgId(invoiceIds, OrgContext.getOrgId());
-
-        if (invoices.size() != invoiceIds.size()) {
-            throw new NotFountException("Selected invoices not found.");
-        }
-
-        for (Invoice invoice : invoices) {
-            invoice.setInvoiceStatus(status);
-        }
-
-        invoiceRepository.saveAll(invoices);
-    }
-
-    @Transactional
     public void deleteInvoice(Map<String, List<Long>> idsMap) {
         List<Long> idsList = idsMap.get("invoice_ids");
         if (invoiceRepository.countByInvoiceIdInAndOrganization_OrgId(idsList, OrgContext.getOrgId()) != idsList.size()) {

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/invoices")
+@RequestMapping("api/v1/invoices")
 @CrossOrigin(origins = "http://localhost:3000")
 public class InvoiceController {
 
@@ -65,11 +65,16 @@ public class InvoiceController {
 
         ApiResponse<Map> response = ApiResponse.<Map>builder()
                 .success(true)
-                .message("Invoice created successfully.")
+                .message("Draft Saved Successfully.")
                 .data(Map.of("invoiceId", invoiceId))
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/{invoiceId}/generate")
+    public void generateInvoices(@PathVariable Long invoiceId) {
+//        invoiceService.generateInvoices();
     }
 
     @PutMapping("/{invoiceId}")
@@ -94,18 +99,6 @@ public class InvoiceController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @PostMapping("/generate")
-    public void generateInvoices() {
-//        invoiceService.generateInvoices();
-    }
-
-    @PatchMapping("/status")
-    public ResponseEntity<Void> updateInvoiceStatus(@RequestBody StatusUpdateDto statusUpdateReq) {
-        invoiceService.updateInvoiceStatus(statusUpdateReq);
-
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping

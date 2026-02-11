@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/orgs")
+@RequestMapping("api/v1/orgs")
 @CrossOrigin(origins = "http://localhost:3000")
 public class OrgController {
 

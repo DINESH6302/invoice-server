@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/templates")
+@RequestMapping("api/v1/templates")
 @CrossOrigin(origins = "http://localhost:3000")
 public class TemplateController {
 
