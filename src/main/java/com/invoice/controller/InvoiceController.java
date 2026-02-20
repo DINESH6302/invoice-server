@@ -72,9 +72,16 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/{invoiceId}/generate")
-    public void generateInvoices(@PathVariable Long invoiceId) {
-//        invoiceService.generateInvoices();
+    @PostMapping("/generate")
+    public ResponseEntity<ApiResponse<Void>> generateInvoices(@RequestBody InvoiceCreationRequestDto requestDto) {
+        invoiceService.createInvoice(requestDto);
+
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(true)
+                .message("Invoice Saved Successfully.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{invoiceId}")

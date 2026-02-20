@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class InvoiceService {
@@ -82,6 +83,11 @@ public class InvoiceService {
     @Transactional
     public Long createInvoice(InvoiceCreationRequestDto requestDto) {
         Long customerId = requestDto.getCustomerId();
+        Long invoiceId = requestDto.getInvoiceId();
+
+        Invoice invoice = invoiceRepository.findByInvoiceId_AndOrganization_OrgId(invoiceId, OrgContext.getOrgId())
+                .orElse(new Invoice());
+
         Customer customer = customerRepository.findByCustomerIdAndOrganization_OrgId(customerId, OrgContext.getOrgId())
                 .orElseThrow(() -> new NotFountException("Customer not found."));
 
@@ -104,11 +110,10 @@ public class InvoiceService {
             }
         }
 
-        Invoice invoice = new Invoice();
         invoice.setCustomer(customer);
         invoice.setInvoiceNumber(invoiceNumber);
         invoice.setDate(date);
-        invoice.setInvoiceStatus(InvoiceStatus.DRAFT);
+        invoice.setInvoiceStatus(invoiceId == null ? InvoiceStatus.DRAFT : InvoiceStatus.GENERATED);
         invoice.setOrganization(org);
         invoice.setTemplate(template);
         invoice.setTotal(requestDto.getTotal());

@@ -7,6 +7,8 @@ import java.util.Map;
 
 @Data
 public class InvoiceCreationRequestDto {
+    private Long invoiceId;
+
     @NotNull
     private Long customerId;
 
